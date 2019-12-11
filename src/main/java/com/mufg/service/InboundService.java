@@ -1,4 +1,4 @@
-package com.goomo.inbound;
+package com.mufg.service;
 
 import java.io.StringReader;
 import java.util.logging.Level;
@@ -12,17 +12,22 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.springframework.stereotype.Service;
 
-import com.goomo.DataTransformationApplication;
+import com.mufg.documents.LOGGER;
 
 @Service
-public class InService {
+public class InboundService {
 
-	private Logger log = Logger.getLogger(DataTransformationApplication.class.getName());
+	private Logger log = Logger.getLogger(InboundService.class.getName());
 	
 	public LOGGER inputConversion(String payload) throws JAXBException {
 		log.log(Level.INFO, "InService :: inputConversion() :: Init");
-		JAXBContext jc = JAXBContext.newInstance(LOGGER.class);
-		Unmarshaller unmarshaller = jc.createUnmarshaller();
+		Unmarshaller unmarshaller = null ;
+		try {
+			JAXBContext jc = JAXBContext.newInstance(LOGGER.class);
+			unmarshaller = jc.createUnmarshaller();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		StreamSource streamSource = new StreamSource(new StringReader(payload));
 		JAXBElement<LOGGER> je = unmarshaller.unmarshal(streamSource, LOGGER.class);
 		LOGGER logger = (LOGGER) je.getValue();

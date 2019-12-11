@@ -1,4 +1,4 @@
-package com.goomo.inbound;
+package com.mufg.documents;
 
 import java.util.List;
 

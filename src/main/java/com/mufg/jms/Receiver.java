@@ -1,4 +1,4 @@
-package com.goomo.jms;
+package com.mufg.jms;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -13,25 +13,25 @@ import org.springframework.jms.annotation.JmsListener;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Component;
 
-import com.goomo.DataTransformationApplication;
-import com.goomo.inbound.InService;
-import com.goomo.inbound.LOGGER;
-import com.goomo.outbound.OutPutService;
+import com.mufg.documents.LOGGER;
+import com.mufg.service.InboundService;
+import com.mufg.service.OutboundService;
 
 @Component
-public class Listener {
-
-	private Logger log = Logger.getLogger(DataTransformationApplication.class.getName());
+public class Receiver {
+    
+	private Logger log = Logger.getLogger(Receiver.class.getName());
 	
 	@Autowired
-	private InService inService;
+	private InboundService inService;
 	
 	@Autowired
-	private OutPutService outPutService;
+	private OutboundService outPutService;
 	
-	@JmsListener(destination = "inbound.queue")
-	@SendTo("outbound.queue")
-	public String receiveMessage(final Message jsonMessage) throws JMSException, JAXBException {
+	
+	@JmsListener(destination = "in.xml.queue", containerFactory = "myFactory")
+	@SendTo("out.xml.queue")
+	public String receiveXMLMessage(final Message jsonMessage) throws JMSException, JAXBException {
 		log.log(Level.INFO, "Listener :: receiveMessage() :: Init");
 		if(jsonMessage instanceof TextMessage) {
 			TextMessage textMessage = (TextMessage)jsonMessage;
@@ -39,6 +39,7 @@ public class Listener {
 			LOGGER inLogger = inService.inputConversion(textMessage.getText()); 
 			String outLogger = outPutService.outputConversion(inLogger);
 			log.log(Level.INFO, "Listener :: OutPut :: Data :: " + outLogger );
+			//.sendMessage("out.xml.queue",outLogger);
 			log.log(Level.INFO, "Listener :: receiveMessage() :: Ends");
 			return outLogger;
 		}

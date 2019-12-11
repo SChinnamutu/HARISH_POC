@@ -1,4 +1,4 @@
-package com.goomo.outbound;
+package com.mufg.service;
 
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -13,31 +13,34 @@ import javax.xml.bind.Marshaller;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import com.goomo.DataTransformationApplication;
+import com.mufg.documents.FIELD;
+import com.mufg.documents.LOGGER;
 
 @Service
-public class OutPutService {
+public class OutboundService {
 
-	private Logger log = Logger.getLogger(DataTransformationApplication.class.getName());
+	private Logger log = Logger.getLogger(OutboundService.class.getName());
 	
-	public String outputConversion(com.goomo.inbound.LOGGER inLogger) throws JAXBException {
+	public String outputConversion(LOGGER inLogger) throws JAXBException {
 		log.log(Level.INFO, "OutPutService :: outputConversion() :: Init");
-		LOGGER outLogger = new LOGGER();
 		List<FIELD> outFieldList  = new ArrayList<FIELD>();
 		FIELD outField = null;
-		for(com.goomo.inbound.FIELD inField : inLogger.getFIELD() ) {
-			if(!OutPutService.removedTags().contains(inField.getName())) {
+		for(FIELD inField : inLogger.getFIELD() ) {
+			if(!OutboundService.removedTags().contains(inField.getName())) {
 				outField = new FIELD();
 				BeanUtils.copyProperties(inField, outField);
 				outFieldList.add(outField);
 			}
 		}
-		outLogger.setFIELD(outFieldList);
+		//Clear the existing details from LOGGER object
+		inLogger.getFIELD().clear(); //It makes empty in the list object
+		//Set the new set of data
+		inLogger.setFIELD(outFieldList);
 		StringWriter writer = new StringWriter();
 		JAXBContext jaxbContext = JAXBContext.newInstance(LOGGER.class);
 	    Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 	    jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-	    jaxbMarshaller.marshal(outLogger, writer);
+	    jaxbMarshaller.marshal(inLogger, writer);
 	    log.log(Level.INFO, "OutPutService :: outputConversion() :: Ends");
 		return writer.toString();
 	}
@@ -48,6 +51,11 @@ public class OutPutService {
 		removedTags.add("cd_file");
 		removedTags.add("id_err_typ");
 		removedTags.add("cd_svrty_lvl");
+		removedTags.add("log_narrative");
+		removedTags.add("log_severity");
+		removedTags.add("tx_error");
+		removedTags.add("user_ref");
+		removedTags.add("user_id");
 		return removedTags;
 	}
 }

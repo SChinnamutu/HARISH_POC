@@ -1,6 +1,4 @@
-package com.goomo.outbound;
-
-import java.io.Serializable;
+package com.mufg.documents;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -8,17 +6,10 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlValue;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-public class FIELD implements Serializable {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
+public class FIELD {
 
 	@XmlAttribute
 	private String type;
-	
 	
 	@XmlAttribute
 	private String name;
