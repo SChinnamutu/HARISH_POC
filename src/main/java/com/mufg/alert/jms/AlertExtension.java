@@ -53,6 +53,7 @@ public class AlertExtension {
 	
 	@JmsListener(destination = "in.xml.queue", containerFactory = "myFactory")
 	public void processAlert(final Message jsonMessage) throws JMSException{
+		LOGGER.info("AlertExtension :: processAlert() :: Init");
 		MQTMC2 mqtrg = null;
 		MQQueueManager qMgr = null;
 		MQQueue queue = null;
@@ -526,7 +527,7 @@ public class AlertExtension {
 			}
 
 		}
-
+		LOGGER.info("AlertExtension :: processAlert() :: Ends");
 	}	
 
 }
