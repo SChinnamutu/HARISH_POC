@@ -19,7 +19,7 @@ import com.mufg.alert.service.ParseLertMessageService;
 @Service
 public class ParseAlertMessageImpl implements ParseLertMessageService {
 
-	private static final Logger LOGGER = Logger.getLogger(SendEmailAlertImpl.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(ParseAlertMessageImpl.class.getName());
 	
 	@Override
 	public SevMessage parseAlert(String alertEvent) throws XMLStreamException {
