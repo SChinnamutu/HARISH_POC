@@ -1,11 +1,14 @@
 # HARISH_POC
 
 
+Test
+
+
 git clone https://github.com/SChinnamutu/HARISH_POC/new/api-queue-batch-service
 
 cd goomo-user-service
 
-mvn clean install -DskipTests
+mvn clean install -DskipTests 
 
 java -jar target/api-queue-batch-service-0.0.1-SNAPSHOT.jar
 
