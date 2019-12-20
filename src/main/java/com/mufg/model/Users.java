@@ -1,22 +1,16 @@
-package com.opencodez.entity;
+package com.mufg.model;
 
 import java.math.BigDecimal;
-
-import javax.persistence.Entity;
-import javax.persistence.Id;
 
 import lombok.Data;
 
 @Data
-@Entity
 public class Users {
 	
-	@Id
 	private Long userId;
-	
 	private String name;
-	
 	private String dept;
-	
 	private BigDecimal account;
+	private String orderId;
+	
 }

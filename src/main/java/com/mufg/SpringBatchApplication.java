@@ -1,7 +1,8 @@
-package com.opencodez;
+package com.mufg;
 
 import javax.jms.ConnectionFactory;
 
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jms.DefaultJmsListenerContainerFactoryConfigurer;
@@ -12,19 +13,30 @@ import org.springframework.jms.config.JmsListenerContainerFactory;
 import org.springframework.jms.support.converter.MappingJackson2MessageConverter;
 import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.jms.support.converter.MessageType;
+import org.springframework.web.client.RestTemplate;
 
 import lombok.extern.slf4j.Slf4j;
 
 @SpringBootApplication
 @EnableJms
 @Slf4j
-public class SpringQueueApplication {
+public class SpringBatchApplication implements CommandLineRunner {
 	
 	 public static void main(String[] args) {
-		log.info("SpringQueueApplication started");
-		SpringApplication.run(SpringQueueApplication.class, args);
+		SpringApplication.run(SpringBatchApplication.class, args);
+		log.info("SpringBatchApplication started");
 	 }
-
+	
+	 @Override
+	 public void run(String... args) throws Exception {
+		
+	 }
+	 
+	 @Bean
+	 public RestTemplate template() {
+		 return new RestTemplate();
+	 }
+	
 	 // Only required due to defining myFactory in the receiver
 	 @Bean
 	 public JmsListenerContainerFactory<?> myFactory(
@@ -44,6 +56,4 @@ public class SpringQueueApplication {
 	    converter.setTypeIdPropertyName("_type");
 	    return converter;
 	  }
-	  
-	  
 }
