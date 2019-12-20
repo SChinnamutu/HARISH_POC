@@ -7,3 +7,6 @@
  mvn clean install -DskipTests
  
  java -jar target/goomo-user-service-0.0.1-SNAPSHOT.jar
+ 
+ 
+ http://localhost:8091/users
