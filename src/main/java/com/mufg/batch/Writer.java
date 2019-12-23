@@ -47,17 +47,13 @@ public class Writer implements ItemWriter<Object>{
 		objects.forEach(i -> log.debug("Received the information of a details: {}", i));
 		Object response = objects.get(0);
 		if(response instanceof User) {
-			UserEntity userEntity = gson.fromJson(gson.toJson(objects.get(0)),UserEntity.class);
-			userRepo.save(userEntity);
+			userRepo.save(gson.fromJson(gson.toJson(objects.get(0)),UserEntity.class));
 		}else if(response instanceof AuthorizedUser) {
-			AuthorizedUserEntity authUserEntity = gson.fromJson(gson.toJson(objects.get(0)),AuthorizedUserEntity.class);
-			authUserRepo.save(authUserEntity);
+			authUserRepo.save(gson.fromJson(gson.toJson(objects.get(0)),AuthorizedUserEntity.class));
 		}else if(response instanceof NonAuthorizedUser) {
-			NonAuthorizedUserEntity nonAuthUserEntity = gson.fromJson(gson.toJson(objects.get(0)),NonAuthorizedUserEntity.class);
-			nonAuthUserRepo.save(nonAuthUserEntity);
+			nonAuthUserRepo.save(gson.fromJson(gson.toJson(objects.get(0)),NonAuthorizedUserEntity.class));
 		}else if(response instanceof CorporateUser) {
-			CorporateUserEntity corpUserEntity =  gson.fromJson(gson.toJson(objects.get(0)),CorporateUserEntity.class);
-			corpUserRepo.save(corpUserEntity);
+			corpUserRepo.save(gson.fromJson(gson.toJson(objects.get(0)),CorporateUserEntity.class));
 		}
 		log.info("Writer process ends");
 	}
