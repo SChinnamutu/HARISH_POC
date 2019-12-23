@@ -16,7 +16,6 @@ import com.mufg.model.AuthorizedUser;
 import com.mufg.model.CorporateUser;
 import com.mufg.model.NonAuthorizedUser;
 import com.mufg.model.User;
-import com.mufg.queue.QueueSender;
 import com.mufg.repository.AuthorizedUserRepository;
 import com.mufg.repository.CorporateUserRepository;
 import com.mufg.repository.NonAuthorizedUserRepository;
@@ -28,9 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Writer implements ItemWriter<Object>{
 
-	@Autowired
-	private QueueSender sender;
-	
 	@Autowired
 	private UserRepository userRepo;
 	
@@ -51,19 +47,15 @@ public class Writer implements ItemWriter<Object>{
 		objects.forEach(i -> log.debug("Received the information of a details: {}", i));
 		Object response = objects.get(0);
 		if(response instanceof User) {
-			sender.sendMessage("pdd2.user.queue", objects.get(0));
 			UserEntity userEntity = gson.fromJson(gson.toJson(objects.get(0)),UserEntity.class);
 			userRepo.save(userEntity);
 		}else if(response instanceof AuthorizedUser) {
-			sender.sendMessage("pdd2.auth.user.queue", objects.get(0));
 			AuthorizedUserEntity authUserEntity = gson.fromJson(gson.toJson(objects.get(0)),AuthorizedUserEntity.class);
 			authUserRepo.save(authUserEntity);
 		}else if(response instanceof NonAuthorizedUser) {
-			sender.sendMessage("pdd2.non.auth.queue", objects.get(0));
 			NonAuthorizedUserEntity nonAuthUserEntity = gson.fromJson(gson.toJson(objects.get(0)),NonAuthorizedUserEntity.class);
 			nonAuthUserRepo.save(nonAuthUserEntity);
 		}else if(response instanceof CorporateUser) {
-			sender.sendMessage("pdd2.corp.user.queue", objects.get(0));
 			CorporateUserEntity corpUserEntity =  gson.fromJson(gson.toJson(objects.get(0)),CorporateUserEntity.class);
 			corpUserRepo.save(corpUserEntity);
 		}
