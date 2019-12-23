@@ -25,14 +25,16 @@ public class JobInvokerScheduler {
 
 	
 	@Scheduled(cron = "	0 0 12 1/1 * ?")
-	public String handle() throws Exception {
-		log.info("JobInvokerScheduler :: handle() :: Init");
+	public void processTask() throws Exception {
+		long startTime = System.currentTimeMillis();
+		log.info("JobInvokerScheduler :: processTask() :: Init");
 		JobParameters jobParameters = new JobParametersBuilder()
 				.addLong("time", System.currentTimeMillis()).toJobParameters();
 		jobLauncher.run(accountKeeperJob, jobParameters);
-		log.info("JobInvokerScheduler :: handle() :: Batch job has been invoked");
-		log.info("JobInvokerScheduler :: handle() :: End");
-		return "Batch job has been invoked";
+		log.info("JobInvokerScheduler :: processTask() :: Batch job has been invoked");
+		long endTime = System.currentTimeMillis();
+	    log.info("JobInvokerScheduler :: processTask() :: TimeTaken in MilliSeconds :: " + (endTime - startTime));
+	    log.info("JobInvokerScheduler :: processTask() :: End");
 	}
 	    
 }
