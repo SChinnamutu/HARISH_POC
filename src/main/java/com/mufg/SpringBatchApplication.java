@@ -13,12 +13,14 @@ import org.springframework.jms.config.JmsListenerContainerFactory;
 import org.springframework.jms.support.converter.MappingJackson2MessageConverter;
 import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.jms.support.converter.MessageType;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
 
 import lombok.extern.slf4j.Slf4j;
 
 @SpringBootApplication
 @EnableJms
+@EnableScheduling
 @Slf4j
 public class SpringBatchApplication implements CommandLineRunner {
 	

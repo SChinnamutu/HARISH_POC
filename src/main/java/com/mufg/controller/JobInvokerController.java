@@ -26,8 +26,7 @@ public class JobInvokerController {
     public String handle() throws Exception {
     	log.info("JobInvokerController :: handle() :: Init");
         JobParameters jobParameters = new JobParametersBuilder()
-        								//.addString("source", "Spring Boot")
-        		 						.addLong("time",System.currentTimeMillis())
+        								.addLong("time",System.currentTimeMillis())
         								.toJobParameters();
         jobLauncher.run(accountKeeperJob, jobParameters);
         log.info("JobInvokerController :: handle() :: Batch job has been invoked");
