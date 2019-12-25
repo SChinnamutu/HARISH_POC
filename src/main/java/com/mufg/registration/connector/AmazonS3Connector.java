@@ -70,7 +70,7 @@ public class AmazonS3Connector {
 	}
 	
 	public List<String> listBuckets() {
-		List<String> buckets = s3Client.listBuckets().stream().map( bucket -> bucket.getName()).collect(Collectors.toList());
+		List<String> buckets = s3Client.listBuckets().stream().map(bucket -> bucket.getName()).collect(Collectors.toList());
 		return buckets;
 	}
 
@@ -80,46 +80,8 @@ public class AmazonS3Connector {
 		 }
 	}
 	
-	public void createDirectory(String bucketName) {
-		String folderName = "MUFG/";
-		// create meta-data for your folder and set content-length to 0
-	    ObjectMetadata metadata = new ObjectMetadata();
-	    metadata.setContentLength(0);
-	    // create empty content
-	    InputStream emptyContent = new ByteArrayInputStream(new byte[0]);
-	    // create a PutObjectRequest passing the folder name suffixed by /
-	    PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName,folderName , emptyContent, metadata);
-	    // send request to S3 to create folder
-	    s3Client.putObject(putObjectRequest);
-		
-	}
-
-	
-	public void createFileInDirectory(String bucketName,File file) {
-		String folderName = "MUFG/";
-		// create meta-data for your folder and set content-length to 0
-	    PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName,folderName ,file);
-	    // send request to S3 to create folder
-	    s3Client.putObject(putObjectRequest);
-		
-	}
-
-
-	public void deleteDirectory(String bucketName,String prefix) {
-	    ObjectListing objectList = s3Client.listObjects(bucketName, prefix );
-	    List<S3ObjectSummary> objectSummeryList =  objectList.getObjectSummaries();
-	    String[] keysList = new String[ objectSummeryList.size() ];
-	    int count = 0;
-	    for( S3ObjectSummary summery : objectSummeryList ) {
-	        keysList[count++] = summery.getKey();
-	    }
-	    DeleteObjectsRequest deleteObjectsRequest = new DeleteObjectsRequest( bucketName ).withKeys( keysList );
-	    this.s3Client.deleteObjects(deleteObjectsRequest);
-	}
-
 	public List<String> listDirectory(String bucketName) {
-		String folderKey = "MUFG";
-	    ListObjectsRequest listObjectsRequest = new ListObjectsRequest().withBucketName(bucketName).withPrefix(folderKey + "/");
+		ListObjectsRequest listObjectsRequest = new ListObjectsRequest().withBucketName(bucketName);
 	    List<String> keys = new ArrayList<String>();
 	    ObjectListing objects = s3Client.listObjects(listObjectsRequest);
 	    for (;;) {
@@ -132,6 +94,32 @@ public class AmazonS3Connector {
 	    }
 	    return keys;
 	}
-
+	
+	public void createDirectory(String bucketName,String suffix) {
+		String folderName = "MUFG_"+suffix+"/";
+		log.info("Directory Name :: " + folderName);
+		ObjectMetadata metadata = new ObjectMetadata();
+	    metadata.setContentLength(0);
+	    InputStream emptyContent = new ByteArrayInputStream(new byte[0]);
+	    PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName,folderName , emptyContent, metadata);
+	    s3Client.putObject(putObjectRequest);
+		
+	}
+	
+	public void deleteDirectory(String bucketName,String folderName) {
+	    ObjectListing objectList = s3Client.listObjects(bucketName);
+	    List<S3ObjectSummary> objectSummeryList =  objectList.getObjectSummaries();
+	    String[] keysList = new String[ 1 ];
+	    int count = 0;
+	    for( S3ObjectSummary summery : objectSummeryList ) {
+	    	if(folderName.equals(summery.getKey())) {
+	    		keysList[count++] = summery.getKey();
+	    	}
+	    }
+	    DeleteObjectsRequest deleteObjectsRequest = new DeleteObjectsRequest( bucketName ).withKeys( keysList );
+	    this.s3Client.deleteObjects(deleteObjectsRequest);
+	}
 
 }
+
+

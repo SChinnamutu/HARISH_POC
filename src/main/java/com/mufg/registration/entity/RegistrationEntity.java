@@ -26,7 +26,7 @@ public class RegistrationEntity {
 	private Long Id;
 	private String passportNumber;
 	private String referenceId;
-	private String passportFront;
+	private String passportURL;
 	private Date createAt;
 	
 }

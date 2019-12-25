@@ -2,7 +2,6 @@ package com.mufg.registration.service;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
@@ -10,7 +9,6 @@ import java.util.List;
 import java.util.UUID;
 
 import org.apache.commons.io.IOUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Base64Utils;
@@ -23,6 +21,8 @@ import com.mufg.registration.io.StatusMessage;
 import com.mufg.registration.repository.RegistrationRepository;
 
 import lombok.extern.slf4j.Slf4j;
+
+
 @Service
 @Slf4j
 public class RegistrationService {
@@ -36,14 +36,23 @@ public class RegistrationService {
 	@Autowired
 	private AmazonS3Connector s3Connector;
 	
+	public RegistrationResponse processCreateNewBucket(RegistrationRequest request) {
+		s3Connector.createBucket(request.getBucketName());
+		return RegistrationResponse.builder().
+				status("SUCCESS").
+				statusMessage(new StatusMessage("SUCCESS_MSG","BUCKET_CREATED_SUCCESS")).
+				referenceId(request.getReferenceId()).
+				build();
+	}
+	
 	
 	public RegistrationResponse processSaveData(RegistrationRequest request) throws IOException {
 		log.info("RegistrationService :: processSaveData() :: Init ");
-		String referenceId = "MUFG".concat(UUID.randomUUID().toString().substring(0, 8));
+		String referenceId = UUID.randomUUID().toString().substring(0, 8);
 		//Store file in AWS
 		byte[] imageByte = Base64Utils.decodeFromString(request.getPassportNumber());
 		ByteArrayInputStream bis = new ByteArrayInputStream(imageByte);
-		String key =  referenceId+"_"+"MUFG_PASSPORT_BACK.jpg";
+		String key =  "MUFG_"+referenceId+"_PASSPORT.txt";
 		File outputfile = new File(key);
 		IOUtils.copy(bis, new FileOutputStream(outputfile));
 		bis.close();
@@ -52,18 +61,19 @@ public class RegistrationService {
 			outputfile.delete();
 		}
 		String url = s3Connector.getUrl(S3_BUCKET_NAME,key);
-		//Store file in DB
+		//Store file location in DB
 		RegistrationEntity entity = new RegistrationEntity();
-		entity.setReferenceId(referenceId);
-		BeanUtils.copyProperties(request, entity);
-		entity.setPassportFront(url);
 		entity.setCreateAt(new Date());
+		entity.setPassportNumber(request.getPassportNumber());
+		entity.setPassportURL(url);
+		entity.setReferenceId(referenceId);
 		repository.save(entity);
 		log.info("RegistrationService :: processSaveData() :: Ends ");
 		return RegistrationResponse.builder().
 				status("SUCCESS").
 				statusMessage(new StatusMessage("SUCCESS_MSG","REGISTRATION_DEATILS_SAVED_SUCCESS")).
 				referenceId(entity.getReferenceId()).
+				data(url).
 				build();
 	}
 
@@ -95,7 +105,7 @@ public class RegistrationService {
 	
 
 	public RegistrationResponse processDeleteDirectoryInBucket(RegistrationRequest request) {
-		s3Connector.deleteDirectory(request.getBucketName(), request.getPrefix());
+		s3Connector.deleteDirectory(S3_BUCKET_NAME,request.getFolderName());
 		return RegistrationResponse.builder().
 				status("SUCCESS").
 				statusMessage(new StatusMessage("SUCCESS_MSG","BUCKET_CREATED_SUCCESS")).
@@ -103,14 +113,7 @@ public class RegistrationService {
 				build();
 	}
 
-	public RegistrationResponse processCreateNewBucket(RegistrationRequest request) {
-		s3Connector.createBucket(request.getBucketName());
-		return RegistrationResponse.builder().
-				status("SUCCESS").
-				statusMessage(new StatusMessage("SUCCESS_MSG","BUCKET_CREATED_SUCCESS")).
-				referenceId(request.getReferenceId()).
-				build();
-	}
+	
 
 	public RegistrationResponse processDeleteAllFilesInBucket(RegistrationRequest request) {
 		s3Connector.deleteFiles(S3_BUCKET_NAME);
@@ -131,7 +134,8 @@ public class RegistrationService {
 	}
 
 	public RegistrationResponse processCreateDirectoryInBucket() {
-		s3Connector.createDirectory(S3_BUCKET_NAME);
+		String referenceId = UUID.randomUUID().toString().substring(0,6);
+		s3Connector.createDirectory(S3_BUCKET_NAME,referenceId);
 		return RegistrationResponse.builder().
 				status("SUCCESS").
 				statusMessage(new StatusMessage("SUCCESS_MSG","DIRECTORY_CREATED_SUCCESS")).
@@ -139,20 +143,7 @@ public class RegistrationService {
 	}
 	
 
-	public RegistrationResponse createFileInDirectory(RegistrationRequest request) throws FileNotFoundException, IOException {
-		String referenceId = UUID.randomUUID().toString().substring(0,8);
-		byte[] imageByte = Base64Utils.decodeFromString(request.getPassportNumber());
-		ByteArrayInputStream bis = new ByteArrayInputStream(imageByte);
-		String key =  referenceId+"_"+"MUFG_PASSPORT_BACK.jpg";
-		File outputfile = new File(key);
-		IOUtils.copy(bis, new FileOutputStream(outputfile));
-		bis.close();
-		s3Connector.createFileInDirectory(S3_BUCKET_NAME,outputfile);
-		return RegistrationResponse.builder().
-				status("SUCCESS").
-				statusMessage(new StatusMessage("SUCCESS_MSG","FILE_DIRECTORY_CREATED_SUCCESS")).
-				build();
-	}
+	
 	
 }
 
