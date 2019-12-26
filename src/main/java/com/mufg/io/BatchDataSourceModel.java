@@ -1,9 +1,9 @@
-package com.mufg.registration.io;
+package com.mufg.io;
 
 import lombok.Data;
 
 @Data
-public class RegistrationDataSourceModel {
+public class BatchDataSourceModel {
 
 	private String S3AccessKey;
 	private String S3SecretKey;

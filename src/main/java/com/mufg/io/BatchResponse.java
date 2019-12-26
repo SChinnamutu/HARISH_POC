@@ -1,4 +1,4 @@
-package com.mufg.registration.io;
+package com.mufg.io;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -15,11 +15,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonInclude(value=Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class RegistrationResponse {
+public class BatchResponse {
 
 	private String status;
 	private StatusMessage statusMessage;
-	private String referenceId;
 	private Object data;
 	
 }

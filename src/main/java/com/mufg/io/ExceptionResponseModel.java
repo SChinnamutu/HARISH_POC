@@ -1,6 +1,6 @@
-package com.mufg.registration.exception;
+package com.mufg.io;
 
-import com.mufg.registration.io.StatusMessage;
+import com.mufg.io.StatusMessage;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

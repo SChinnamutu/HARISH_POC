@@ -1,4 +1,4 @@
-package com.mufg.registration.io;
+package com.mufg.io;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,13 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RegistrationRequest {
+public class BatchRequest {
 
 	private String passportNumber;
-	private String referenceId;
-	private String passport;
-	private String bucketName;
-	private String prefix;
-	private String fileName;
 	private String folderName;
 }

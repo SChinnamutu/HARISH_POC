@@ -1,4 +1,4 @@
-package com.mufg.registration.io;
+package com.mufg.io;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

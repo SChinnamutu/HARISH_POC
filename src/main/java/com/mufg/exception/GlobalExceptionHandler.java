@@ -1,18 +1,19 @@
-package com.mufg.registration.exception;
+package com.mufg.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.mufg.registration.io.StatusMessage;
+import com.mufg.io.ExceptionResponseModel;
+import com.mufg.io.StatusMessage;
 
 import lombok.extern.slf4j.Slf4j;
 
 
 /**
  * This class used to define global and custom exceptions for server internal error, custom, bad request, time out etc,.
- * @author Sasikumar Chinnamuthu
+ * @author Harish
  *
  */
 @RestControllerAdvice
@@ -21,7 +22,7 @@ public class GlobalExceptionHandler {
 
 	/**
 	 * This method used to throw server internal error at global level
-	 * @author Sasikumar Chinnamuthu
+	 * @author Harish
 	 * @param e
 	 * @return
 	 * @throws Exception
