@@ -96,14 +96,14 @@ public class AmazonS3Connector {
 		ListObjectsRequest listObjectsRequest = new ListObjectsRequest().withBucketName(bucketName).withPrefix(folderName + "/");
 		ObjectListing objectListing = s3Client.listObjects(listObjectsRequest);
 	    List<S3ObjectSummary> objectSummeryList =  objectListing.getObjectSummaries();
-	    String[] keysList = new String[1];
+	    String[] keysList = new String[ objectSummeryList.size() ];
 	    int count = 0;
 	    for( S3ObjectSummary summery : objectSummeryList ) {
-	    	if(!StringUtils.isEmpty(summery.getKey()) && summery.getKey().split("/")[1].equals(fileName)) {
+	    	if(!StringUtils.isEmpty(summery.getKey())) {
 	    		keysList[count++] = summery.getKey();	
 	    	}
 	    }
-	    DeleteObjectsRequest deleteObjectsRequest = new DeleteObjectsRequest(bucketName).withKeys( keysList );
+	    DeleteObjectsRequest deleteObjectsRequest = new DeleteObjectsRequest( bucketName ).withKeys( keysList );
 	    this.s3Client.deleteObjects(deleteObjectsRequest);
 	}
 	
