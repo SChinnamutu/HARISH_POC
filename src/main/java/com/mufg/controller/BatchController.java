@@ -29,6 +29,17 @@ public class BatchController {
 	
 	
 	/*
+	 * This method is used to list all buckets.
+	*/
+	@GetMapping(value= "/buckets")
+	public ResponseEntity<BatchResponse> processListBuckets() throws Exception {
+		log.info("RegistrationController :: processListBuckets() :: Init ");
+		BatchResponse response = regService.processListBuckets();
+		log.info("RegistrationController :: processListBuckets() :: Ends "+ response.toString());
+		return ResponseEntity.ok(response);
+	}
+	
+	/*
 	 * This method is used to list all directories in a bucket with argument of bucketName.
 	*/
 	@GetMapping(value= "/directory")
@@ -87,5 +98,15 @@ public class BatchController {
 		return ResponseEntity.ok(response);
 	}
 	
-	
+	/*
+	 * This method is used to delete a directory in a bucket with argument of bucketName and directory name.
+	*/
+	@DeleteMapping(value = "/file")
+	public ResponseEntity<BatchResponse> processDeleteFileInDirectory(@RequestBody BatchRequest request)
+			throws Exception {
+		log.info("BatchController :: processDeleteFileInDirectory() :: Init ");
+		BatchResponse response = regService.processDeleteFileInDirectory(request);
+		log.info("BatchController :: processDeleteFileInDirectory() :: Ends " + response.toString());
+		return ResponseEntity.ok(response);
+	}
 }

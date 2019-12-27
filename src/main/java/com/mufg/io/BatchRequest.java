@@ -13,4 +13,5 @@ public class BatchRequest {
 
 	private String passportNumber;
 	private String folderName;
+	private String fileName;
 }

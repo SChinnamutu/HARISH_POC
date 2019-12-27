@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,11 @@ public class AmazonS3Connector {
 
 	@Autowired
 	private AmazonS3 s3Client;
+	
+	public List<String> listBuckets() {
+		List<String> buckets = s3Client.listBuckets().stream().map( bucket -> bucket.getName()).collect(Collectors.toList());
+		return buckets;
+	}
 	
 	public List<String> listDirectory(String bucketName) {
 		ListObjectsRequest listObjectsRequest = new ListObjectsRequest().withBucketName(bucketName);
@@ -82,6 +88,23 @@ public class AmazonS3Connector {
 	public void processUploadFileTos3bucket(String bucketName,String folderName ,String fileName, File file) {
 		s3Client.putObject(new PutObjectRequest(bucketName, folderName.concat("/"+fileName), file)
 	            .withCannedAcl(CannedAccessControlList.PublicRead));
+	}
+	
+	
+
+	public void deleteFileInDirectory(String bucketName,String folderName, String fileName) {
+		ListObjectsRequest listObjectsRequest = new ListObjectsRequest().withBucketName(bucketName).withPrefix(folderName + "/");
+		ObjectListing objectListing = s3Client.listObjects(listObjectsRequest);
+	    List<S3ObjectSummary> objectSummeryList =  objectListing.getObjectSummaries();
+	    String[] keysList = new String[1];
+	    int count = 0;
+	    for( S3ObjectSummary summery : objectSummeryList ) {
+	    	if(!StringUtils.isEmpty(summery.getKey()) && summery.getKey().split("/")[1].equals(fileName)) {
+	    		keysList[count++] = summery.getKey();	
+	    	}
+	    }
+	    DeleteObjectsRequest deleteObjectsRequest = new DeleteObjectsRequest(bucketName).withKeys( keysList );
+	    this.s3Client.deleteObjects(deleteObjectsRequest);
 	}
 	
 	public String getUrl(String bucketName,String key) {

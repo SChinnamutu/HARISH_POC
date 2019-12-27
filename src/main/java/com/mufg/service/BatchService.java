@@ -32,6 +32,14 @@ public class BatchService {
 	@Autowired
 	private AmazonS3Connector s3Connector;
 	
+	
+	public BatchResponse processListBuckets() {
+		 List<String>  buckets =  s3Connector.listBuckets();
+		return BatchResponse.builder()
+				.data(buckets)
+				.build();
+	}
+	
 	public BatchResponse processListDirectoryInBucket() {
 		log.info("BatchService :: processListDirectoryInBucket() :: Init ");
 		List<String> directories = s3Connector.listDirectory(model.getS3BucketName());
@@ -91,6 +99,14 @@ public class BatchService {
 				data(url).
 				build();
 	   
+	}
+
+	public BatchResponse processDeleteFileInDirectory(BatchRequest request) {
+		s3Connector.deleteFileInDirectory(model.getS3BucketName(),request.getFolderName(),request.getFileName());
+		return BatchResponse.builder().
+				status("SUCCESS").
+				statusMessage(new StatusMessage("SUCCESS_MSG","FILE_DELETE_SUCCESS")).
+				build();
 	}
 	
 	
