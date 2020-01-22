@@ -1,0 +1,49 @@
+spring:
+  application:
+    name: t36_cbh_505_503_sod_eod
+  profiles:
+    active: dev
+  activemq:
+    user: admin
+    password: admin
+    broker-url: tcp://localhost:61616?jms.redeliveryPolicy.maximumRedeliveries=1
+    pool:
+      enabled: true
+      max-connections: 10
+  vlnced401inputQname: VLN.CED_401.REQ.IN
+  vlnced401outputQname: VLN.CED_401.RES.OUT
+  
+---
+#===== DEV =======
+spring:
+  profiles: dev
+  
+---
+#===== TEST =======
+spring:
+  profiles: test
+  activemq:
+    broker-url: ${AMQ_BROKER_URL}
+    pool:
+      enabled: true
+      max-connections: 10
+  vlnced401inputQname: ${VLN.CED_401_INPUT_QNAME}
+  vlnced401outputQname: ${VLN.CED_401_OUTPUT_QNAME}
+  
+
+---
+#===== MODEL =======
+spring:
+  profiles: model
+
+
+---
+#===== PROD =======
+spring:
+  profiles: prod
+
+  
+  
+server:
+  port: 8052
+  
