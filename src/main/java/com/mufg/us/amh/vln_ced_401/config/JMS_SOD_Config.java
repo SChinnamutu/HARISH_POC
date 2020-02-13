@@ -1,11 +1,10 @@
 package com.mufg.us.amh.vln_ced_401.config;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.camel.component.jms.JmsComponent;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
-import org.springframework.jms.core.JmsTemplate;
 
 
 
@@ -13,33 +12,20 @@ import org.springframework.jms.core.JmsTemplate;
 public class JMS_SOD_Config {
 
 	@Value("${spring.activemq.broker-url}")
-	String BROKER_URL;
-	@Value("${spring.activemq.user}")
-	String BROKER_USERNAME;
-	@Value("${spring.activemq.password}")
-	String BROKER_PASSWORD;
+	private String BROKER_URL;
 
 	@Bean
 	public ActiveMQConnectionFactory connectionFactory() {
 		ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory();
 		connectionFactory.setBrokerURL(BROKER_URL);
-		connectionFactory.setUserName(BROKER_USERNAME);
-		connectionFactory.setPassword(BROKER_PASSWORD);
 		return connectionFactory;
 	}
 
 	@Bean
-	public JmsTemplate jmsTemplate() {
-		JmsTemplate template = new JmsTemplate();
-		template.setConnectionFactory(connectionFactory());
-		return template;
-	}
-
-	@Bean
-	public DefaultJmsListenerContainerFactory jmsListenerContainerFactory() {
-		DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
-		factory.setConnectionFactory(connectionFactory());
-		factory.setConcurrency("1-1");
-		return factory;
-	}
+    public JmsComponent activemq() {
+        JmsComponent jmsComponent = new JmsComponent();
+        jmsComponent.setDeliveryMode(1);
+        jmsComponent.setConnectionFactory(connectionFactory());
+        return jmsComponent;
+    }
 }

@@ -4,14 +4,18 @@ spring:
   profiles:
     active: dev
   activemq:
-    user: admin
-    password: admin
     broker-url: tcp://localhost:61616?jms.redeliveryPolicy.maximumRedeliveries=1
     pool:
       enabled: true
       max-connections: 10
   vlnced401inputQname: VLN.CED_401.REQ.IN
   vlnced401outputQname: VLN.CED_401.RES.OUT
+
+info:
+  app:
+    name: CAN_LOAN_IRIS
+    version: 1.0.0
+
   
 ---
 #===== DEV =======
@@ -46,4 +50,19 @@ spring:
   
 server:
   port: 8052
+
+
+depiris:
+  queue:
+    vdpced401:
+      input: DEP_IRIS.VDP_CED_1301.DBCRB.REQ.IN
+      output: DEP_IRIS.VDP_CED_1301.DBCRB.REQ.OUT.AL
+      fail: DEP_IRIS.VDP_CED_1301.DBCRB.REQ.IN.FAIL
+      exception : DEP_IRIS.VDP_CED_1301.DBCRB.REQ.EXCEPTION
+    vdpced402:
+      input: DEP_IRIS.VDP_CED_1302.DBCRB.REQ.IN
+      output: DEP_IRIS.VDP_CED_1302.DBCRB.REQ.OUT.AL
+      fail: DEP_IRIS.VDP_CED_1302.DBCRB.REQ.IN.FAIL
+      exception : DEP_IRIS.VDP_CED_1302.DBCRB.REQ.EXCEPTION
+    
   

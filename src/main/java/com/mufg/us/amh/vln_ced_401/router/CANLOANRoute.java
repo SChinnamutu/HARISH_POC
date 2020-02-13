@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.mufg.us.amh.vln_ced_401.constants.AppConstants;
-import com.mufg.us.amh.vln_ced_401.processer.CANLOANProcessor;
+import com.mufg.us.amh.vln_ced_401.processer.CANLOANProcessor_401;
 
 
 @Component
@@ -19,7 +19,7 @@ public class CANLOANRoute extends RouteBuilder {
 	private String outputQname;
 
 	@Autowired
-	private CANLOANProcessor processor;
+	private CANLOANProcessor_401 processor;
 	
 	@Override
 	public void configure() throws Exception {
