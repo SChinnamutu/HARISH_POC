@@ -60,7 +60,7 @@ public class CANLOANProcessor {
 	 */
 	public InputDocument unmarshallingDocument(String payload) throws JAXBException {
 		log.info("CANLOANProcessor :: unmarshallingDocument() :: Init ");
-		JAXBContext jc = JAXBContext.newInstance(Document.class);
+		JAXBContext jc = JAXBContext.newInstance(InputDocument.class);
 		Unmarshaller unmarshaller = jc.createUnmarshaller();
 		StreamSource streamSource = new StreamSource(new StringReader(payload));
 		JAXBElement<InputDocument> je = unmarshaller.unmarshal(streamSource, InputDocument.class);

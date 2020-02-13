@@ -81,6 +81,7 @@ public class CANLOANMapper_401 extends BaseMapper{
 				}
 			}
 		}
+		
 		irisDocument.getAREAGRP().add(areaGrp);
 		log.info("OutputTransformHandler :: marshallingDocument() :: Ends");
 		return irisDocument;

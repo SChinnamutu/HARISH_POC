@@ -16,6 +16,10 @@ info:
     name: CAN_LOAN_IRIS
     version: 1.0.0
 
+api:
+  message:
+     ccisd: 1208
+     encoding: 546
   
 ---
 #===== DEV =======
@@ -52,7 +56,7 @@ server:
   port: 8052
 
 
-depiris:
+caniris:
   queue:
     vdpced401:
       input: DEP_IRIS.VDP_CED_1301.DBCRB.REQ.IN

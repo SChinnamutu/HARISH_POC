@@ -8,8 +8,9 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @EnableConfigurationProperties
-@ConfigurationProperties(prefix = "depiris")
+@ConfigurationProperties(prefix = "caniris")
 public class MessageReader {
+	
 	private Map<String, QueueInfo> queue;
 
 	public Map<String, QueueInfo> getQueue() {
